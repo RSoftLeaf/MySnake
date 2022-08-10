@@ -10,6 +10,7 @@ namespace MySnake
     {
         public bool isSnake { get; set; }
         public bool isFood { get; set; }
+        public Color DefaultColor = Color.Silver;
         public Grid()
         {
 
@@ -21,10 +22,27 @@ namespace MySnake
             this.isSnake = false;
             this.isFood = false;
             this.FlatStyle = FlatStyle.Flat;
-            this.BackColor = Color.Silver;
+            this.BackColor = this.DefaultColor;
             
         }
+        public void SetSnake()
+        {
+            this.isSnake = true;
+            this.BackColor = Color.Black;
+        }
+        public void SetFood()
+        {
+            this.isFood = true;
+            this.BackColor= Color.Red;    
+            
+        }
+        public void Reset()
+        {
+            this.isSnake = false;
+            this.BackColor = DefaultColor;
+            this.isFood= false;
 
+        }
 
     }
 }
