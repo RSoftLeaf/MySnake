@@ -35,13 +35,15 @@ namespace MySnake
         {
 
         }
-        public void NewSnakeSet()
+        public async void NewSnakeSet()
         {
             MySnake = new List<SnakeCell>();
             int StartX = DimX / 2;
             int StartY = DimY - 1;
             AddSnakeCell(StartX, StartY);
+            await Task.Delay(1000);
             AddSnakeCell(StartX, StartY - 1);
+            await Task.Delay(1000);
             AddSnakeCell(StartX, StartY - 2);
         }
         public void AddSnakeCell(int x, int y)
