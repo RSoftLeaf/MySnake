@@ -8,11 +8,11 @@ namespace MySnake
         #region VARIABLES
 
         //Поле
-        int DimX = 10;
-        int DimY = 10;
+        int DimX = 30;
+        int DimY = 30;
         //Стартові параметри
-        int SizeX = 30;
-        int SizeY = 30;
+        int SizeX = 25;
+        int SizeY = 25;
         int LocationX = 10;
         int LocationY = 50;
         int GRIGMargin = 2;
@@ -20,6 +20,11 @@ namespace MySnake
         Grid[,] Field;
         string Direction = "UP";
         List<SnakeCell> MySnake;
+        //Round
+        bool IsGame = true;
+        bool GameOver = false;
+        //await\async
+        int TaskDelay = 80;
 
         #endregion
         public MainForm()
@@ -35,16 +40,38 @@ namespace MySnake
         {
 
         }
+        async void SnakeMove() 
+        {
+            int StartX = DimX / 2;
+            int StartY = DimY - 1;
+            int iTemp = 2;
+            try
+            {
+                while (true)
+                {
+                    AddSnakeCell(StartX, StartY - iTemp);
+                    iTemp += 1;
+                    await Task.Delay(TaskDelay);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Вы проиграли");
+            }
+
+        }
         public async void NewSnakeSet()
         {
             MySnake = new List<SnakeCell>();
             int StartX = DimX / 2;
             int StartY = DimY - 1;
+            await Task.Delay(TaskDelay);
             AddSnakeCell(StartX, StartY);
-            await Task.Delay(1000);
+            await Task.Delay(TaskDelay);
             AddSnakeCell(StartX, StartY - 1);
-            await Task.Delay(1000);
+            await Task.Delay(TaskDelay);
             AddSnakeCell(StartX, StartY - 2);
+            SnakeMove();
         }
         public void AddSnakeCell(int x, int y)
         {
@@ -99,6 +126,13 @@ namespace MySnake
             {
                 Direction = "DOWN";
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            int StartX = DimX / 2;
+            int StartY = DimY - 1;
+            
         }
     }
 }
