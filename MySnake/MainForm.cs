@@ -25,6 +25,10 @@ namespace MySnake
         //await\async
         int TaskDelay = 1000;
         int iTemp = 2;
+        //Timer
+        System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer();
+        //Cheat Commands
+        bool god = false;
 
         #endregion
         public MainForm()
@@ -32,6 +36,7 @@ namespace MySnake
             InitializeComponent();
             Initialize();
             timer1.Interval = TaskDelay;
+            StartNewGame();
         }
         public void StartNewGame()
         {
@@ -40,7 +45,8 @@ namespace MySnake
         }
         public void StopGame()
         {
-            
+            timer1.Stop();
+            MessageBox.Show("Проигрыш", "Сообщение");
         }
         public void SetFood()
         {
@@ -49,35 +55,127 @@ namespace MySnake
             {
                 int randimX = randim.Next(DimX);
                 int randimY = randim.Next(DimY);
-                if (!Field[randimX, randimY].isSnake) 
-                { 
-                    Field[randimX, randimY].SetFood(); 
-                    break; 
+                if (!Field[randimX, randimY].isSnake)
+                {
+                    Field[randimX, randimY].SetFood();
+                    break;
                 }
-            } 
+            }
 
         }
         public void SnakeMove()
         {
+            int MaxX = Field.GetLength(0) - 1;
+            int MaxY = Field.GetLength(1) - 1;
+            god = true;
             int x = MySnake[0].X;
             int y = MySnake[0].Y;
+            //  MessageBox.Show("x: " + x + ";y: " + y);
             switch (Direction)
             {
                 case "UP":
                     {
-                        if (Field[x,y - 1].isFood)
-                            AddSnakeCell(x, y - 1, false);
+                        if (y == 0)
+                        {
+                            if (!god)
+                                StopGame();
+                            else
+                            {
+                                if (Field[x, MaxY].isFood)
+                                    AddSnakeCell(x, MaxY, false);
+                                else
+                                    AddSnakeCell(x, MaxY, true);
+
+                            }
+
+                        }
                         else
-                            AddSnakeCell(x, y - 1, true);
+                        {
+                            if (Field[x, y - 1].isFood)
+                                AddSnakeCell(x, y - 1, false);
+                            else
+                                AddSnakeCell(x, y - 1, true);
+                        }
                         break;
                     }
                 case "DOWN":
                     {
-                        //
+                        if (y == MaxY)
+                        {
+                            if (!god)
+                                StopGame();
+                            else
+                            {
+                                if (Field[x, 0].isFood)
+                                    AddSnakeCell(x, 0, false);
+                                else
+                                    AddSnakeCell(x, 0, true);
+
+                            }
+
+                        }
+                        else
+                        {
+                            if (Field[x, y + 1].isFood)
+                                AddSnakeCell(x, y + 1, false);
+                            else
+                                AddSnakeCell(x, y + 1, true);
+                        }
                         break;
                     }
+                case "LEFT":
+                    {
+                        if (x == 0)
+                        {
+                            if (!god)
+                                StopGame();
+                            else
+                            {
+                                if (Field[MaxX, y].isFood)
+                                    AddSnakeCell(MaxX, y, false);
+                                else
+                                    AddSnakeCell(MaxX, y, true);
+
+                            }
+
+                        }
+                        else
+                        {
+                            if (Field[x - 1, y].isFood)
+                                AddSnakeCell(x - 1, y, false);
+                            else
+                                AddSnakeCell(x - 1, y, true);
+                        }
+                        break;
+                    }
+                case "RIGHT":
+                    {
+                        if (x == MaxX)
+                        {
+                            if (!god)
+                                StopGame();
+                            else
+                            {
+                                if (Field[0, y].isFood)
+                                    AddSnakeCell(0, y, false);
+                                else
+                                    AddSnakeCell(0, y, true);
+
+                            }
+
+                        }
+                        else
+                        {
+                            if (Field[x + 1, y].isFood)
+                                AddSnakeCell(x + 1, y, false);
+                            else
+                                AddSnakeCell(x + 1, y, true);
+                        }
+                        break;
+                    }
+
             }
-            
+
             iTemp += 1;
         }
         public void NewSnakeSet()
@@ -108,6 +206,14 @@ namespace MySnake
         }
         public void Initialize()
         {
+            #region EMPTY
+            //============================================================
+
+
+
+            //==========================================================*/
+            #endregion
+
             #region PANEL INITIALIZE
             //============================================================
 
@@ -118,7 +224,7 @@ namespace MySnake
 
             #region FIELD INITIALIZE
             //============================================================
-            
+
             Field = new Grid[DimX, DimY];
 
             for (int i = 0; i < Field.GetLength(0); i++)
@@ -129,11 +235,18 @@ namespace MySnake
                     this.Controls.Add(Field[i, j]);
                 }
             }
-            
+
+            //==========================================================*/
+            #endregion
+
+            #region TIMER INITIALIZE
+            //============================================================
+
+            timer1.Tick += new System.EventHandler(timer1_Tick);
+
             //==========================================================*/
             #endregion
         }
-
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Down)
@@ -141,11 +254,37 @@ namespace MySnake
                 Direction = "DOWN";
             }
         }
+        //
+        //CODE
+        //
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Up)
+            {
+                Direction = "UP";
+                return true;
+            }
+            if (keyData == Keys.Down)
+            {
+                Direction = "DOWN";
+                return true;
+            }
+            if (keyData == Keys.Left)
+            {
+                Direction = "LEFT";
+                return true;
+            }
+            if (keyData == Keys.Right)
+            {
+                Direction = "RIGHT";
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             SnakeMove();
-
         }
     }
 }
