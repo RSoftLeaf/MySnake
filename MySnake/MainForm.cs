@@ -29,7 +29,10 @@ namespace MySnake
         //Timer
         System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer();
         //Cheat Commands
-        bool god = false;
+        bool god = true;
+        //Command
+        string command;
+        //Snake length
 
         #endregion
         public MainForm()
@@ -68,7 +71,7 @@ namespace MySnake
         {
             int MaxX = Field.GetLength(0) - 1;
             int MaxY = Field.GetLength(1) - 1;
-            god = true;
+            //god = true;
             int x = MySnake[0].X;
             int y = MySnake[0].Y;
             //  MessageBox.Show("x: " + x + ";y: " + y);
@@ -76,130 +79,125 @@ namespace MySnake
             {
                 case "UP":
                     {
-                        if (!Field[x, y - 1].isSnake)
+                        if (y == 0)
                         {
-                            if (y == 0)
+                            if (god)
                             {
-                                if (!god)
-                                    StopGame();
+                                if (Field[x, MaxY].isFood)
+                                    AddSnakeCell(x, MaxY, false, true);
                                 else
-                                {
-                                    if (Field[x, MaxY].isFood)
-                                        AddSnakeCell(x, MaxY, false, true);
-                                    else
-                                        AddSnakeCell(x, MaxY, true, false);
-
-                                }
-
+                                    AddSnakeCell(x, MaxY, true, false);
                             }
                             else
                             {
-                                if (Field[x, y - 1].isFood)
-                                    AddSnakeCell(x, y - 1, false, true);
-                                else
-                                    AddSnakeCell(x, y - 1, true, false);
+                                StopGame();
                             }
                         }
                         else
                         {
-                            StopGame();
+                            if (Field[x, y - 1].isSnake)
+                            {
+                                StopGame();
+                            }
+                            else if (Field[x, y - 1].isFood)
+                                AddSnakeCell(x, y - 1, false, true);
+                            else
+                                AddSnakeCell(x, y - 1, true, false);
+
                         }
+
                         break;
                     }
                 case "DOWN":
                     {
-                        if (!Field[x, y + 1].isSnake)
+                        if (y == MaxY)
                         {
-                            if (y == MaxY)
+                            if (god)
                             {
-                                if (!god)
-                                    StopGame();
+                                if (Field[x, 0].isFood)
+                                    AddSnakeCell(x, 0, false, true);
                                 else
-                                {
-                                    if (Field[x, 0].isFood)
-                                        AddSnakeCell(x, 0, false, true);
-                                    else
-                                        AddSnakeCell(x, 0, true, false);
-
-                                }
-
+                                    AddSnakeCell(x, 0, true, false);
                             }
                             else
                             {
-                                if (Field[x, y + 1].isFood)
-                                    AddSnakeCell(x, y + 1, false, true);
-                                else
-                                    AddSnakeCell(x, y + 1, true, false);
+                                StopGame();
                             }
                         }
                         else
                         {
-                            StopGame();
+                            if (Field[x, y + 1].isSnake)
+                            {
+                                StopGame();
+                            }
+                            else if (Field[x, y + 1].isFood)
+                                AddSnakeCell(x, y + 1, false, true);
+                            else
+                                AddSnakeCell(x, y + 1, true, false);
+
                         }
                         break;
                     }
                 case "LEFT":
                     {
-                        if (!Field[x - 1, y].isSnake)
+                        if (x == 0)
                         {
-                            if (x == 0)
+                            if (god)
                             {
-                                if (!god)
-                                    StopGame();
+                                if (Field[MaxX, y].isFood)
+                                    AddSnakeCell(MaxX, y, false, true);
                                 else
-                                {
-                                    if (Field[MaxX, y].isFood)
-                                        AddSnakeCell(MaxX, y, false, true);
-                                    else
-                                        AddSnakeCell(MaxX, y, true, false);
-
-                                }
-
+                                    AddSnakeCell(MaxX, y, true, false);
                             }
                             else
                             {
-                                if (Field[x - 1, y].isFood)
-                                    AddSnakeCell(x - 1, y, false, true);
-                                else
-                                    AddSnakeCell(x - 1, y, true, false);
+                                StopGame();
                             }
                         }
                         else
                         {
-                            StopGame();
+                            if (Field[x - 1, y].isSnake)
+                            {
+                                StopGame();
+                            }
+                            else if (Field[x - 1, y].isFood)
+                                AddSnakeCell(x - 1, y, false, true);
+                            else
+                                AddSnakeCell(x - 1, y, true, false);
+
                         }
+
                         break;
                     }
                 case "RIGHT":
                     {
-                        if (!Field[x + 1, y].isSnake)
+                        if (x == MaxX)
                         {
-                            if (x == MaxX)
+                            if (god)
                             {
-                                if (!god)
-                                    StopGame();
+                                if (Field[0, y].isFood)
+                                    AddSnakeCell(0, y, false, true);
                                 else
-                                {
-                                    if (Field[0, y].isFood)
-                                        AddSnakeCell(0, y, false, true);
-                                    else
-                                        AddSnakeCell(0, y, true, false);
-
-                                }
-
+                                    AddSnakeCell(0, y, true, false);
                             }
                             else
                             {
-                                if (Field[x + 1, y].isFood)
-                                    AddSnakeCell(x + 1, y, false, true);
-                                else
-                                    AddSnakeCell(x + 1, y, true, false);
+                                StopGame();
                             }
                         }
                         else
                         {
-                            StopGame();
-                        }
+                            if (Field[x + 1, y].isSnake)
+                            {
+                                StopGame();
+                            }
+                            else if (Field[x + 1, y].isFood)
+                                AddSnakeCell(x + 1, y, false, true);
+                            else
+                                AddSnakeCell(x + 1, y, true, false);
+
+                        } 
+
                         break;
                     }
 
@@ -209,6 +207,17 @@ namespace MySnake
         }
         public void NewSnakeSet()
         {
+            if (MySnake != null)
+            {
+                MySnake.Clear();
+            }
+            for (int i = 0; i < Field.GetLength(0); i++)
+            {
+                for (int j = 0; j < Field.GetLength(1); j++)
+                {
+                    Field[i, j].Reset();
+                }
+            }
             MySnake = new List<SnakeCell>();
             int StartX = DimX / 2;
             int StartY = DimY - 1;
@@ -239,6 +248,22 @@ namespace MySnake
         public void Initialize()
         {
             #region EMPTY
+            //============================================================
+
+
+
+            //==========================================================*/
+            #endregion
+
+            #region DIMENTIONS INITIALIZE
+            //============================================================
+
+
+
+            //==========================================================*/
+            #endregion
+
+            #region CONSOLE INITIALIZE
             //============================================================
 
 
@@ -278,6 +303,8 @@ namespace MySnake
 
             //==========================================================*/
             #endregion
+
+            
         }
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
@@ -321,6 +348,52 @@ namespace MySnake
         private void timer1_Tick(object sender, EventArgs e)
         {
             SnakeMove();
+            lbSnakeLength.Text = MySnake.Count.ToString();
+        }
+        void ShowCMD()
+        {
+            tbConsoleFull.Text += "\n\rCommands:" +
+                "god 1\n\r" +
+                "god 0\n\r" +
+                "start\n\r" +
+                "help\n\r";
+        }
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            if (tbConsole.Text != null)
+            {
+                command = tbConsole.Text;
+                tbConsole.Text = null;
+                tbConsoleFull.Text += command + "\r\n";
+                switch (command)
+                {
+                    case "god 1":
+                        {
+                            god = true;
+                            break;
+                        }
+                    case "god 0":
+                        {
+                            god = false;
+                            break;
+                        }
+                    case "start":
+                        {
+                            StartNewGame();
+                            break;
+                        }
+                    case "help":
+                        {
+                            ShowCMD();
+                            break;
+                        }
+                    default:
+                        {
+                            tbConsoleFull.Text += "Неизвестная комманда, help Вам в помощь\n\r";
+                            break;
+                        }
+                }
+            }
         }
     }
 }
