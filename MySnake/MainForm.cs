@@ -364,6 +364,23 @@ namespace MySnake
                     Direction = "RIGHT";
                 return true;
             }
+            /*
+            if (keyData == Keys.C)
+            {
+                if (tbConsole.Visible)
+                {
+                    tbConsole.Visible = false;
+                    btnSend.Visible = false;
+                    tbConsoleFull.Visible = false;
+                }
+                else
+                {
+                    tbConsole.Visible = true;
+                    btnSend.Visible = true;
+                    tbConsoleFull.Visible = true;
+                }
+            }
+            */
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -383,6 +400,9 @@ namespace MySnake
                 "sn_cheats 0\r\n" +
                 "sn_showsl 1\r\n" +
                 "sn_showsl 0\r\n" +
+                "graphs 1\r\n" +
+                "graphs 0\r\n" +
+                "name\r\n" +
                 "cns_clear\r\n" +
                 "help\r\n";
         }
@@ -606,9 +626,9 @@ namespace MySnake
             enteringName = false;
             tbConsoleFull.Text += $"\r\nДобро пожаловать {username}\r\n";
             if (SearchUserRecord() != 0)
-                tbConsoleFull.Text += $"Ваш текущий рекорд = {SearchUserRecord()}";
+                tbConsoleFull.Text += $"Ваш текущий рекорд = {SearchUserRecord()}\r\n";
             else
-                tbConsoleFull.Text += $"Ваш текущий рекорд = null";
+                tbConsoleFull.Text += $"Ваш текущий рекорд = null\r\n";
         }
         private void timer2_Tick(object sender, EventArgs e)
         {
