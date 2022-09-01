@@ -1,6 +1,7 @@
 //           Слава Україні           //
 //           Героям Слава            //
 
+using System.Drawing.Imaging;
 using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
 namespace MySnake
@@ -45,6 +46,7 @@ namespace MySnake
         //XML
         const string filePath = "records.xml";
         int currentUserRecord = 0;
+        List<SnakeRecord> snakeRecords;
 
         #endregion
         public MainForm()
@@ -54,6 +56,7 @@ namespace MySnake
             timer1.Interval = TaskDelay;
             tbConsoleFull.Text = "C# Started\r\nReady to play\r\nHost: local\n\r";
             timer2.Start();
+            LoadFromXMLFile();
         }
         public void StartNewGame()
         {
@@ -66,11 +69,23 @@ namespace MySnake
             MessageBox.Show("Проигрыш", "Сообщение");
             //
             int LengthSnake = MySnake.Count;
-            if (LengthSnake > currentUserRecord) 
+            foreach (SnakeRecord snkRecord in snakeRecords)
             {
-                SaveToXMLFile(LengthSnake);
-                tbConsoleFull.Text += $"new record = {LengthSnake}\r\n";
+                if (snkRecord.username == username)
+                {
+                    if (LengthSnake > snkRecord.snakeLength)
+                    {
+                        snkRecord.snakeLength = LengthSnake;
+                        SaveToXMLFile();
+                        tbConsoleFull.Text += $"new record = {LengthSnake}\r\n";
+                        break;
+                    }
+                }
             }
+            //if (LengthSnake > ) 
+            //{
+            //
+            //}
         }
         public void SetFood()
         {
@@ -418,14 +433,15 @@ namespace MySnake
         {
             tbConsoleFull.Text += $"god == {truefalse}, def == 0\r\n";
         }
-        void SaveToXMLFile(int SnakeLength)
+        void SaveToXMLFile()
         {
             XDocument doc = new XDocument();
             XElement records = new XElement("records");
+            foreach (SnakeRecord record in snakeRecords)
             {
                 XElement user = new XElement("user");
-                XElement name = new XElement("name", username);
-                XElement snakelength = new XElement("snakelength", SnakeLength);
+                XElement name = new XElement("name", record.username);
+                XElement snakelength = new XElement("snakelength", record.snakeLength);
                 user.Add(name);
                 user.Add(snakelength);
                 records.Add(user);
@@ -433,9 +449,9 @@ namespace MySnake
             doc.Add(records);
             doc.Save(filePath);
         }
-        string LoadFromXMLFile()
+        void LoadFromXMLFile()
         {
-            string result = "";
+            snakeRecords = new List<SnakeRecord>();
             XDocument doc = XDocument.Load(filePath);
             XElement? records = doc.Element("records");
 
@@ -443,9 +459,8 @@ namespace MySnake
             {
                 XElement? name = user.Element("name");
                 XElement? snakelength = user.Element("snakelength");
-                result += name.Value + " " + snakelength.Value + "\n";
+                snakeRecords.Add(new SnakeRecord(name.Value, int.Parse(snakelength.Value)));   
             }
-            return result;
         }
         int SearchUserRecord()
         {
@@ -473,6 +488,17 @@ namespace MySnake
                 tbConsoleFull.Text += $"{username}: {command}\r\n";
                 switch (command)
                 {
+                    case "restart": Application.Restart(); break;
+                    case "quit": Application.Exit(); break;
+                    case "exit": Application.Exit(); break;
+                    case "records":
+                        {
+                            foreach (SnakeRecord sRecord in snakeRecords)
+                            {
+                                tbConsoleFull.Text += $"{sRecord.username} {sRecord.snakeLength}\r\n";
+                            }
+                            break;
+                        }
                     case "name":
                         {
                             tbConsoleFull.Text += "Enter your name\r\n";
@@ -624,11 +650,25 @@ namespace MySnake
         {
             username = command;
             enteringName = false;
-            tbConsoleFull.Text += $"\r\nДобро пожаловать {username}\r\n";
-            if (SearchUserRecord() != 0)
-                tbConsoleFull.Text += $"Ваш текущий рекорд = {SearchUserRecord()}\r\n";
-            else
-                tbConsoleFull.Text += $"Ваш текущий рекорд = null\r\n";
+            tbConsoleFull.Text += $"\r\nДобро пожаловать, добро пожаловать в сити-17.\r\nСами вы его выбрали, или его выбрали за Вас, \r\nэто лучший город из оставшихся\r\n";
+            bool i = false;
+            foreach (SnakeRecord record in snakeRecords)
+            {
+                if (record.username == username)
+                {
+                    i = true;
+                    tbConsoleFull.Text += $"Добро пожаловать {username}! \r\n Ваш текущий рекорд == {record.snakeLength}\r\n";
+                }
+            }
+            if (i != true)
+            {
+                tbConsoleFull.Text += $"Добро пожаловать {username}! \r\n Ваш текущий рекорд == null\r\nМы запишем Ваш рекорд после конца игры!\r\n";
+                snakeRecords.Add(new SnakeRecord(username, 0));
+            }
+            //if (SearchUserRecord() != 0)
+            //  tbConsoleFull.Text += $"Ваш текущий рекорд = {SearchUserRecord()}\r\n";
+            //else
+            //    tbConsoleFull.Text += $"Ваш текущий рекорд = null\r\n";
         }
         private void timer2_Tick(object sender, EventArgs e)
         {
